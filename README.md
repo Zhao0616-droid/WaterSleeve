@@ -113,6 +113,16 @@ python create_dataset.py --extract-baseline --extract-jukebox
 
 This will process the dataset to match the settings used in the paper. The data processing will take ~24 hrs and ~50 GB to precompute all the Jukebox features for the dataset.
 
+### (Optional) Cleaning custom pose-estimation data
+
+Video pose-estimation output (HybrIK / EasyMocap) can be converted into EDGE-compatible motion pkls (y-up, 60 fps, AIST++ format) with the built-in cleaning pipeline: coordinate conversion, resampling, rotation/translation smoothing, foot-contact labeling, foot-slide correction, and 5s-window slicing. Pure numpy, no pytorch3d needed:
+
+```.bash
+python data/pose_cleaning.py --input_dir poses_raw/ --output_dir data/custom_aistpp \
+    --joints body25 --fix_foot_slide --save_contacts --slice --wav_dir music/
+python tests/test_cleaning.py   # 11 local regression tests
+```
+
 ## Evaluation
 
 Evaluate your model's outputs with the Physical Foot Contact (PFC) score proposed in the paper:
